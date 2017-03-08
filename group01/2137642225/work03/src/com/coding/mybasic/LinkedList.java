@@ -347,6 +347,7 @@ public class LinkedList implements List {
 		Node next;
 		public Node() {
 		}
+		@SuppressWarnings("unused")
 		public Node(Object data, Node next) {
 			super();
 			this.data = data;
