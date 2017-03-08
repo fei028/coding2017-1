@@ -47,7 +47,12 @@ public class LinkedListTest {
 
 	@Test
 	public void testRemoveIntInt() {
-		fail("Not yet implemented");
+		linkedList.add(2);
+		linkedList.add(5);
+		linkedList.add(7);
+		linkedList.add(8);
+		linkedList.remove(0, 1);
+		assertEquals(5, linkedList.get(0));
 	}
 
 	@Test

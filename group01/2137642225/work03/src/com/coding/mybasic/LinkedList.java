@@ -143,9 +143,43 @@ public class LinkedList implements List {
 	 * @param i
 	 * @param length
 	 */
-	public  void remove(int i, int length){
+	public void remove(int i, int length){
 		
+		checkIndex(i);
+		if(length <= 0){
+			// 忽略操作
+			return;
+		}
+		int end = i + length;
+		removeNodes(i,end - 1);
 	}
+	private void removeNodes(int startIndex, int endIndex) {
+		if(startIndex == 0){
+			// 全部删除
+			if(endIndex == (size() - 1)){
+				head = null;
+				last = head;
+			} else {
+				Node node = getNodeByIndex(endIndex);
+				head = node.next;
+				node = null;
+			}
+		} else {
+			// 删除到尾部
+			if(endIndex == (size() - 1)){
+				// 获取删除的第一个节点的前一个节点 变为尾
+				Node newLast = getNodeByIndex(startIndex - 1);
+				newLast.next = null;
+				last = newLast;
+			} else {
+				Node node = getNodeByIndex(startIndex - 1);
+				Node node2 = getNode(node, endIndex + 1 - startIndex);
+				node.next = node2;
+			}
+		}
+		size -= (endIndex - startIndex + 1);
+	}
+
 	/**
 	 * 假定当前链表和list均包含已升序排列的整数
 	 * 从当前链表中取出那些list所指定的元素
@@ -279,6 +313,27 @@ public class LinkedList implements List {
 		
 		while(i < size){
 			if(i == index){
+				return temp;
+			}
+			temp = temp.next;
+			i++;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param startNode
+	 * @param size
+	 * @return
+	 */
+	private Node getNode(Node startNode,int size) {
+		Node temp = startNode;
+		int i = 0;
+		
+		while(i < size){
+			if(i == size){
 				return temp;
 			}
 			temp = temp.next;
