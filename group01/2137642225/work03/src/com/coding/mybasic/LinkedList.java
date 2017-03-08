@@ -116,10 +116,11 @@ public class LinkedList implements List {
 	 * 把该链表逆置
 	 * 例如链表为 3->7->10 , 逆置后变为  10->7->3
 	 */
-	public  void reverse(){		
-		
+	public  void reverse(){
+		reverse(head,null);
 	}
 	
+
 	/**
 	 * 删除一个单链表的前半部分
 	 * 例如：list = 2->5->7->8 , 删除以后的值为 7->8
@@ -127,7 +128,14 @@ public class LinkedList implements List {
 
 	 */
 	public  void removeFirstHalf(){
-		
+		if(size() <= 1){
+			return;
+		}
+		int index = size() >> 1;
+		Node node = getNodeByIndex(index - 1);
+		head = node.next;
+		node.next = null;
+		size -= index;
 	}
 	
 	/**
@@ -305,14 +313,40 @@ public class LinkedList implements List {
 		return element;
 	}
 	
+	/**
+	 * 逆置链表 curNode.next = nextNode
+	 * @param curNode 当前加点
+	 * @param nextNode curNode节点的下一个节点
+	 */
+	private void reverse(Node curNode, Node nextNode) {
+		
+		if(curNode != null){
+			reverse(curNode.next, curNode);
+		} else {// 到了链表末尾
+			return;
+		}
+		// 两个相邻节点之间 前后关系逆置 next反转
+		curNode.next = nextNode;
+		// next更改完毕 交换头尾节点
+		if(nextNode == null){
+			swapHeadTailNode();
+		}
+	}
 	
+	/**
+	 * 交换头尾节点
+	 */
+	private void swapHeadTailNode() {
+		Node temp = head;
+		head = last;
+		last = temp;
+	}
 	
 	private static class Node{
 		Object data;
 		Node next;
 		public Node() {
 		}
-		@SuppressWarnings("unused")
 		public Node(Object data, Node next) {
 			super();
 			this.data = data;
