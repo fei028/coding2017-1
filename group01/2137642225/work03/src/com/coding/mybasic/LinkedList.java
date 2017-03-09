@@ -150,35 +150,12 @@ public class LinkedList implements List {
 			// 忽略操作
 			return;
 		}
-		int end = i + length;
-		removeNodes(i,end - 1);
+		int endIndex = i + length - 1;
+		removeNodes(i,endIndex);
+		// 更新长度
+		size -= length;
 	}
-	private void removeNodes(int startIndex, int endIndex) {
-		if(startIndex == 0){
-			// 全部删除
-			if(endIndex == (size() - 1)){
-				head = null;
-				last = head;
-			} else {
-				Node node = getNodeByIndex(endIndex);
-				head = node.next;
-				node = null;
-			}
-		} else {
-			// 删除到尾部
-			if(endIndex == (size() - 1)){
-				// 获取删除的第一个节点的前一个节点 变为尾
-				Node newLast = getNodeByIndex(startIndex - 1);
-				newLast.next = null;
-				last = newLast;
-			} else {
-				Node node = getNodeByIndex(startIndex - 1);
-				Node node2 = getNode(node, endIndex + 1 - startIndex);
-				node.next = node2;
-			}
-		}
-		size -= (endIndex - startIndex + 1);
-	}
+	
 
 	/**
 	 * 假定当前链表和list均包含已升序排列的整数
@@ -395,6 +372,37 @@ public class LinkedList implements List {
 		Node temp = head;
 		head = last;
 		last = temp;
+	}
+	
+	/**
+	 * 移除从下标为startIndex到下标为endIndex的节点
+	 * @param startIndex
+	 * @param endIndex
+	 */
+	private void removeNodes(int startIndex, int endIndex) {
+		if(startIndex == 0){
+			// 全部删除
+			if(endIndex == (size() - 1)){
+				head = null;
+				last = head;
+			} else {
+				Node node = getNodeByIndex(endIndex);
+				head = node.next;
+				node = null;
+			}
+		} else {
+			// 删除到尾部
+			if(endIndex == (size() - 1)){
+				// 获取删除的第一个节点的前一个节点 变为尾
+				Node newLast = getNodeByIndex(startIndex - 1);
+				newLast.next = null;
+				last = newLast;
+			} else {
+				Node node = getNodeByIndex(startIndex - 1);
+				Node node2 = getNode(node, endIndex + 1 - startIndex);
+				node.next = node2;
+			}
+		}
 	}
 	
 	private static class Node{

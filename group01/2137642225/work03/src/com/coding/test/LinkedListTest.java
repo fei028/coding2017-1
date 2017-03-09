@@ -48,11 +48,13 @@ public class LinkedListTest {
 	@Test
 	public void testRemoveIntInt() {
 		linkedList.add(2);
+		linkedList.remove(0, 1);
+		assertEquals(0, linkedList.size());
 		linkedList.add(5);
 		linkedList.add(7);
 		linkedList.add(8);
-		linkedList.remove(0, 1);
-		assertEquals(5, linkedList.get(0));
+		linkedList.remove(0, 2);
+		assertEquals(1, linkedList.size());
 	}
 
 	@Test
