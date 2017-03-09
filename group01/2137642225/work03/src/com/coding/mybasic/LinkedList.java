@@ -1,5 +1,7 @@
 package com.coding.mybasic;
 
+import java.util.Objects;
+
 public class LinkedList implements List {
 	
 	private Node head;
@@ -133,7 +135,9 @@ public class LinkedList implements List {
 		}
 		int index = size() >> 1;
 		Node node = getNodeByIndex(index - 1);
+		// 更新头部
 		head = node.next;
+		// 将链断掉
 		node.next = null;
 		size -= index;
 	}
@@ -150,7 +154,8 @@ public class LinkedList implements List {
 			// 忽略操作
 			return;
 		}
-		int endIndex = i + length - 1;
+		// 最多删到尾部
+		int endIndex = (i + length) <= size() ? (i + length - 1) : (size() - 1);
 		removeNodes(i,endIndex);
 		// 更新长度
 		size -= length;
@@ -165,27 +170,69 @@ public class LinkedList implements List {
 	 * 返回的结果应该是[101,301,401,601]  
 	 * @param list
 	 */
-	public static int[] getElements(LinkedList list){
-		return null;
+	public int[] getElements(LinkedList list){
+		
+		//
+		if((int)(list.get(list.size() - 1)) >= size()){
+			throw new RuntimeException("list 最大整数值超越了当前list的长度,无法进行操作!!!");
+		}
+		int[] elements = new int[list.size()];
+		fillDataIntoElements(head, list.getNodeByIndex(0), 0, 0, elements);
+		return elements;
 	}
 	
+
 	/**
 	 * 已知链表中的元素以值递增有序排列，并以单链表作存储结构。
 	 * 从当前链表中中删除在list中出现的元素 
-
 	 * @param list
 	 */
-	
-	public  void subtract(LinkedList list){
+	public void subtract(LinkedList list){
 		
+		Node temp = head;
+		Node preNode = null;
+		while(temp != null){
+			int curData = (int)(temp.data);
+			
+			if(curData == (int)list.get(0)){
+				deleteCurNode(preNode,temp);
+			}
+			else if(curData > (int)list.get(0)){
+				// 边界
+				if(curData == (int)list.get(list.size() - 1)){
+					deleteCurNode(preNode, temp);
+				} else if(curData < (int)list.get(list.size() - 1)){
+					if(hasEqualData(curData, list)){
+						deleteCurNode(preNode, temp);
+					} else {
+						preNode = temp;
+					}
+				} else {
+					preNode = temp;
+				}
+			} else {
+				preNode = temp;
+			}
+			temp = temp.next;
+		}
 	}
+	
 	
 	/**
 	 * 已知当前链表中的元素以值递增有序排列，并以单链表作存储结构。
 	 * 删除表中所有值相同的多余元素（使得操作后的线性表中所有元素的值均不相同）
 	 */
-	public  void removeDuplicateValues(){
-		
+	public void removeDuplicateValues(){
+		Node temp = head;
+		Node preNode = null;
+		while(temp.next != null){
+			if(Objects.equals(temp.data, temp.next.data)){
+				deleteCurNode(preNode, temp);
+			} else {
+				preNode = temp;
+			}
+			temp = temp.next;
+		}
 	}
 	
 	/**
@@ -196,6 +243,46 @@ public class LinkedList implements List {
 	 */
 	public  void removeRange(int min, int max){
 		
+		if((int)last.data <= min || (int)head.data >= max){
+			//甚么也不做
+		}
+		else if((int)last.data < max && (int)head.data > min){
+			// 全部删除
+			head = null;
+			last = head;
+			size = 0;
+		}
+		else {
+			Node temp = head;
+			Node preMinNode= null;
+			while(temp != null){
+				if((int)temp.data > min){
+					temp = temp.next;
+					break;
+				}
+				preMinNode = temp;
+				temp = temp.next;
+			}
+			// 计数 删除的长度
+			int i = 1;
+			while(temp != null){
+				if((int)temp.data >= max){
+					if(preMinNode == null){
+						head = temp;
+					} else {
+						preMinNode.next = temp;
+					}
+					break;
+				}
+				temp = temp.next;
+				i++;
+			}
+			
+			size -= i;
+			if(size == 1){
+				last = head;
+			}
+		}
 	}
 	
 	/**
@@ -203,7 +290,8 @@ public class LinkedList implements List {
 	 * 现要求生成新链表C，其元素为当前链表和list中元素的交集，且表C中的元素有依值递增有序排列
 	 * @param list
 	 */
-	public  LinkedList intersection( LinkedList list){
+	public LinkedList intersection(LinkedList list){
+		
 		return null;
 	}
 	
@@ -300,7 +388,7 @@ public class LinkedList implements List {
 	}
 	
 	/**
-	 * 
+	 * 获取从startNode节点开始后size长度 的 节点 如果size == 1 则返回startNode.next == 2 则返回startNode.next.next
 	 * @param startNode
 	 * @param size
 	 * @return
@@ -310,14 +398,10 @@ public class LinkedList implements List {
 		int i = 0;
 		
 		while(i < size){
-			if(i == size){
-				return temp;
-			}
 			temp = temp.next;
 			i++;
 		}
-		
-		return null;
+		return temp;
 	}
 	/**
 	 * 移除最后一个元素
@@ -405,6 +489,70 @@ public class LinkedList implements List {
 		}
 	}
 	
+	/**
+	 * 填充数据到数组
+	 * @param startNode 从链表(当前链表)哪个部位开始遍历
+	 * @param curNode 当前访问的节点(传入的链表)
+	 * @param preNodeData 上一个节点的值(传入的链表)
+	 * @param curIndex 数组填充数据的下标(即elements[curIndex]要填充数据)
+	 * @param elements 需要填充数据的数组
+	 */
+	private void fillDataIntoElements(Node startNode, Node curNode, int preNodeData, int curIndex, int[] elements) {
+		// 退出标志 传入的list遍历完
+		if(curNode == null){
+			return;
+		}
+		// 获取startNode新的开始节点
+		startNode = getNode(startNode, (int)curNode.data - preNodeData);
+		// 填充元素
+		elements[curIndex++] = (int) startNode.data;
+		fillDataIntoElements(startNode, curNode.next, (int)curNode.data, curIndex, elements);
+	}
+	
+	/**
+	 * 删除当前的节点(curNode)
+	 * @param preNode preNode.next = curNode 上一个节点
+	 * @param curNode
+	 */
+	private void deleteCurNode(Node preNode, Node curNode) {
+		
+		if(preNode == null){
+			head = null;
+			preNode = head;
+			head = curNode.next;
+		} 
+		else if(preNode.next == last){
+			preNode.next = null;
+			last = preNode;
+		}
+		else {
+			preNode.next = curNode.next;
+		}
+		size--;
+	}
+
+	/**
+	 * list(排好序)中是否存在节点的值等于curData
+	 * @param curData
+	 * @param list
+	 * @return
+	 */
+	private boolean hasEqualData(int curData, LinkedList list) {
+		// 遍历list
+		Iterator iterator = list.iterator();
+		while(iterator.hasNext()){
+			int next = (int)iterator.next();
+			if(next == curData){
+				return true;
+			}
+			
+			if(next > curData){
+				return false;
+			}
+		}
+		return false;
+	}
+
 	private static class Node{
 		Object data;
 		Node next;

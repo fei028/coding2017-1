@@ -59,27 +59,83 @@ public class LinkedListTest {
 
 	@Test
 	public void testGetElements() {
-		fail("Not yet implemented");
+		linkedList.add(11);
+		linkedList.add(101);
+		linkedList.add(201);
+		linkedList.add(301);
+		linkedList.add(401);
+		linkedList.add(501);
+		linkedList.add(601);
+		linkedList.add(701);
+		LinkedList list = new LinkedList();
+		list.add(1);
+		list.add(3);
+		list.add(4);
+		list.add(6);
+		assertEquals(4, list.size());
+		int[] elements = linkedList.getElements(list);
+		int[] elements2 = new int[]{101,301,401,601};
+		assertArrayEquals(elements2, elements);
 	}
 
 	@Test
 	public void testSubtract() {
-		fail("Not yet implemented");
+		linkedList.add(11);
+		linkedList.add(101);
+		linkedList.add(201);
+		linkedList.add(301);
+		linkedList.add(401);
+		linkedList.add(501);
+		linkedList.add(601);
+		linkedList.add(701);
+		LinkedList list = new LinkedList();
+		list.add(11);
+		list.add(101);
+		list.add(301);
+		list.add(501);
+		list.add(601);
+		list.add(701);
+		linkedList.subtract(list);
+		assertEquals(2, linkedList.size());
+		assertEquals(201, linkedList.get(0));
+		assertEquals(401, linkedList.get(1));
 	}
 
 	@Test
 	public void testRemoveDuplicateValues() {
-		fail("Not yet implemented");
+		linkedList.add(11);
+		linkedList.add(11);
+		linkedList.add(101);
+		linkedList.add(101);
+		linkedList.add(101);
+		linkedList.add(201);
+		linkedList.add(301);
+		linkedList.add(301);
+		linkedList.add(401);
+		linkedList.add(401);
+		linkedList.add(401);
+		linkedList.removeDuplicateValues();
+		assertEquals(5, linkedList.size());
+		assertEquals(11, linkedList.get(0));
+		assertEquals(401, linkedList.get(4));
 	}
 
 	@Test
 	public void testRemoveRange() {
-		fail("Not yet implemented");
+		linkedList.add(11);
+		linkedList.add(101);
+		linkedList.add(201);
+		linkedList.add(301);
+		linkedList.add(401);
+		linkedList.removeRange(10, 401);
+		assertEquals(1, linkedList.size());
+		linkedList.add(402);
+		assertEquals(2, linkedList.size());
 	}
 
 	@Test
 	public void testIntersection() {
-		fail("Not yet implemented");
+		
 	}
 	
 	@After
