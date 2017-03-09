@@ -291,7 +291,20 @@ public class LinkedList implements List {
 	 * @param list
 	 */
 	public LinkedList intersection(LinkedList list){
-		
+		if(this.size() == 0){
+			head = list.head;
+			last = list.last;
+		}
+		if((int)list.last.data < (int)head.data){
+			list.last.next = head;
+			head = list.head;
+			size += list.size();
+		}
+		Node temp = head;
+		Node temp2 = list.head;
+		while(temp != null && temp2 != null){
+			
+		}
 		return null;
 	}
 	
