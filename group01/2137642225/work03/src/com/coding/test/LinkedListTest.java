@@ -135,7 +135,22 @@ public class LinkedListTest {
 
 	@Test
 	public void testIntersection() {
+		linkedList.add(11);
+		linkedList.add(101);
+		linkedList.add(201);
+		linkedList.add(301);
+		linkedList.add(401);
 		
+		LinkedList _list = new LinkedList();
+		_list.add(1);
+		_list.add(11);
+		_list.add(210);
+		_list.add(301);
+		_list.add(401);
+		_list.add(410);
+		LinkedList list = linkedList.intersection(_list);
+		assertEquals(8, list.size());
+		assertEquals(410, list.get(list.size() - 1));
 	}
 	
 	@After

@@ -291,43 +291,43 @@ public class LinkedList implements List {
 	 * @param list
 	 */
 	public LinkedList intersection(LinkedList list){
-		if(this.size() == 0){
-			head = list.head;
-			last = list.last;
-		}
-		if((int)list.last.data < (int)head.data){
-			list.last.next = head;
-			head = list.head;
-			size += list.size();
-		}
-		Node temp = head;
-		Node temp2 = list.head;
-		while(temp != null && temp2 != null){
+		
+		LinkedList c = new LinkedList();
+		
+		Node curNode = head;
+		Node curNode2 = list == null ? null : list.head;
+		
+		while(curNode != null && curNode2 != null){
 			
+			if((int)curNode.data == (int)curNode2.data){
+				c.add(curNode.data);
+				curNode = curNode.next;
+				curNode2 = curNode2.next;
+			}
+			else if((int)curNode.data > (int)curNode2.data){
+				c.add(curNode2.data);
+				curNode2 = curNode2.next;
+			}
+			else{
+				c.add(curNode.data);
+				curNode = curNode.next;
+			}
 		}
-		return null;
+		
+		while(curNode != null){
+			c.add(curNode.data);
+			curNode = curNode.next;
+		}
+		
+		while(curNode2 != null){
+			c.add(curNode2.data);
+			curNode2 = curNode2.next;
+		}
+		
+		return c;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	private Object removeMiddle(int index) {
 		Node temp = getNodeByIndex(index - 1);
 		Node removeNode = temp.next;
