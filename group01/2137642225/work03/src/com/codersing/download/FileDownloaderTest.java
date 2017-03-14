@@ -28,7 +28,10 @@ public class FileDownloaderTest {
 	@Test
 	public void testDownload() {
 		
-		String url = "http://localhost:8080/test.jpg";
+		String url = //"http://localhost:8080/examples/jsp/test.txt";
+				"http://localhost:8080/examples/jsp/TIM1.0.4.exe";
+				//"http://pic2.ooopic.com/12/42/25/02bOOOPIC95_1024.jpg";
+				//"http://dldir1.qq.com/qqfile/qq/TIM1.0.5/20300/TIM1.0.5.exe";
 		
 		FileDownloader downloader = new FileDownloader(url);
 

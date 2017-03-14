@@ -1,5 +1,10 @@
 package com.codersing.download;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Random;
+
 import com.codersing.download.api.Connection;
 import com.codersing.download.api.ConnectionException;
 import com.codersing.download.api.ConnectionManager;
@@ -39,11 +44,51 @@ public class FileDownloader {
 			
 			conn = cm.open(this.url);
 			
-			int length = conn.getContentLength();	
+			long length = conn.getContentLength();	
+			RandomAccessFile destFile = new RandomAccessFile("G:\\" + conn.getFileName(), "rw");
+			destFile.setLength(length);
+			destFile.close();
 			
-			new DownloadThread(conn,0,length-1).start();
+			int downloadThreadNum = randomGenerateThreadNum(10);
+			//downloadThreadNum = 1;
+			long startPos = 0;
+			long size = length / downloadThreadNum;
+			long endPos = -1;
+			Thread[] threads = new Thread[downloadThreadNum];
+			for(int i = 0; i < downloadThreadNum; i++){
+				endPos += size;
+				if(i == (downloadThreadNum - 1)){
+					endPos = length;
+				}
+				conn = cm.open(this.url);
+				threads[i] = new DownloadThread(conn,startPos,endPos,"G:\\" + conn.getFileName());
+				threads[i].start();
+				startPos = endPos + 1;
+			}
+			boolean isNo = false;
+			while(true){
+				for (int i = 0; i < threads.length; i++) {
+					if(threads[i].isAlive()){
+						isNo = true;
+						break;
+					} 
+				}
+				
+				if(isNo){
+					isNo = false;
+				} else {
+					this.listener.notifyFinished();
+					break;
+				}
+			}
 			
 		} catch (ConnectionException e) {			
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			if(conn != null){
@@ -70,4 +115,9 @@ public class FileDownloader {
 		return this.listener;
 	}
 	
+	private int randomGenerateThreadNum(int maxNum) {
+		Random random = new Random();
+		int nextInt = random.nextInt(maxNum);
+		return nextInt < 3 ? (nextInt + 3) : nextInt;
+	}
 }

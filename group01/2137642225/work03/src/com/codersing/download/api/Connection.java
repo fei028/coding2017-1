@@ -9,12 +9,14 @@ public interface Connection {
 	 * @param endPos 结束位置
 	 * @return
 	 */
-	public byte[] read(int startPos,int endPos) throws IOException;
+	public byte[] read(long startPos,long endPos) throws IOException;
 	/**
 	 * 得到数据内容的长度
 	 * @return
 	 */
-	public int getContentLength();
+	public long getContentLength();
+	
+	public String getFileName();
 	
 	/**
 	 * 关闭连接
